@@ -23,7 +23,7 @@ class Audit < ActiveRecord::Base
 
   # Order by ver
   default_scope order(:version)
-  scope :descending, reorder("version DESC")
+  scope :descending, except(:order).order("version DESC")
 
   class << self
 
