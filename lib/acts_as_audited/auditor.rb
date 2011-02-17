@@ -212,6 +212,11 @@ module ActsAsAudited
       def write_audit(attrs)
         attrs[:association] = self.send(audit_associated_with) unless audit_associated_with.nil?
         self.audit_comment = nil
+        attrs[:audited_changes].map { |z,b| 
+          b.each_with_index{ |e,i| 
+            attrs[:audited_changes][z][i]=e.to_f if e && e.is_a?(BigDecimal)
+          }
+        }
         self.audits.create attrs if auditing_enabled
       end
 
