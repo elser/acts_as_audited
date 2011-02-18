@@ -214,9 +214,13 @@ module ActsAsAudited
         self.audit_comment = nil
         attrs[:audited_changes].map { |z,b| 
           if b
-            b.each_with_index{ |e,i| 
-              attrs[:audited_changes][z][i]=e.to_f if e && e.is_a?(BigDecimal)
-            }
+            if b.kind_of?(Array)
+              b.each_with_index{ |e,i| 
+                attrs[:audited_changes][z][i]=e.to_f if e && e.is_a?(BigDecimal)
+              }
+            elsif b.is_a?(BigDecimal)
+              attrs[:audited_changes][z]=b.to_f
+            end
           end
         }
         self.audits.create attrs if auditing_enabled
